@@ -1,0 +1,111 @@
+╔════════════════════════════════════════════════════════════════╗
+║      🚀 БЫСТРЫЙ ЗАПУСК НА BOTHHOST (10 команд)       ║
+╚════════════════════════════════════════════════════════════════╝
+
+⏱️  Время: ~5 минут
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔗 ШАГ 1: ПОДКЛЮЧИСЬ К СЕРВЕРУ
+
+ssh root@YOUR_IP_ADDRESS
+[введи пароль]
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📥 ШАГ 2: ЗАГРУЗИ ФАЙЛЫ (с ПК, не на сервере!)
+
+# На локальном ПК:
+scp -r /path/to/telegram-sales-bot/* root@YOUR_IP:/root/telegram-sales-bot/
+scp /path/to/service_account.json root@YOUR_IP:/root/telegram-sales-bot/
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚙️  ШАГ 3: УСТАНОВКА (на сервере)
+
+apt update && apt upgrade -y
+apt install -y python3 python3-pip git screen
+
+pip3 install python-telegram-bot==20.5 google-auth-oauthlib google-api-python-client python-dotenv
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔧 ШАГ 4: КОНФИГ
+
+cd /root/telegram-sales-bot
+nano .env
+
+# Заполни:
+# TELEGRAM_TOKEN=123456:ABC...
+# GOOGLE_FOLDER_ID=1A2B3C...
+# PAYMENT_ACCOUNT=410013...
+# Сохрани: CTRL+X, Y, Enter
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🚀 ШАГ 5: ЗАПУСК
+
+# Создай systemd сервис
+sudo tee /etc/systemd/system/telegram-bot.service > /dev/null <<EOF
+[Unit]
+Description=Telegram Sales Bot
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/root/telegram-sales-bot
+ExecStart=/usr/bin/python3 /root/telegram-sales-bot/bot.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# Активируй и запусти
+systemctl daemon-reload
+systemctl enable telegram-bot
+systemctl start telegram-bot
+
+# Проверь статус
+systemctl status telegram-bot
+
+# Должно быть: ✅ active (running)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ ТЕСТИРОВАНИЕ
+
+1. Открой Telegram
+2. Найди бота по юзернейму
+3. /start
+4. Нажми "💳 Купить"
+5. Введи Gmail
+6. Проверь папку в Google Drive
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📊 ПОЛЕЗНЫЕ КОМАНДЫ
+
+Смотреть логи:
+systemctl status telegram-bot
+journalctl -u telegram-bot -f
+
+Перезагрузить:
+systemctl restart telegram-bot
+
+Остановить:
+systemctl stop telegram-bot
+
+Отладка:
+python3 /root/telegram-sales-bot/bot.py
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎉 ГОТОВО!
+
+Бот работает 24/7 на твоем VPS!
+
+Вопросы? → Читай DEPLOY_BOTHHOST.md или FAQ.md
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
