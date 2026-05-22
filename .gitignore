@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Secrets (НИКОГДА не коммитьте!)
+.env
+.env.local
+service_account.json
+
+# Database
+*.db
+sales_bot.db
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
