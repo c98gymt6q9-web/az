@@ -31,6 +31,9 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # ========== КОНФИГУРАЦИЯ ==========
+from config import Config
+
+TOKEN = Config.TELEGRAM_TOKEN
 class Config:
     # Telegram
     TOKEN = os.getenv("TELEGRAM_TOKEN", "")
